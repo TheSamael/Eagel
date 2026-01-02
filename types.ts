@@ -29,7 +29,7 @@ export interface Folder {
 }
 
 export type OutputMode = 'text_only' | 'file_only' | 'text_and_file';
-export type FileType = 'docx' | 'xlsx' | 'txt' | 'auto';
+export type FileType = 'doc' | 'xlsx' | 'txt' | 'auto';
 
 export interface Theme {
   id: string;

@@ -22,11 +22,11 @@ const generateFileTool: FunctionDeclaration = {
     properties: {
       filename: { 
         type: Type.STRING, 
-        description: 'Name of the file including extension. Supported extensions: .docx, .xlsx, .txt. For .docx, the content must be HTML structure. For .xlsx, content must be CSV.' 
+        description: 'Name of the file including extension. Supported extensions: .doc, .xlsx, .txt. For .doc, the content must be HTML structure. For .xlsx, content must be CSV.' 
       },
       content: { 
         type: Type.STRING, 
-        description: 'The content of the file. If filename is .xlsx, this must be CSV data. If .docx, this must be HTML body content. If .txt, plain text.' 
+        description: 'The content of the file. If filename is .xlsx, this must be CSV data. If .doc, this must be HTML body content. If .txt, plain text.' 
       },
       mimeType: {
         type: Type.STRING,
@@ -62,7 +62,7 @@ export const sendMessageToGemini = async (
     if (outputMode === 'file_only') {
       instruction += `\n[SYSTEM: The user requested ONLY a file output. File type: ${requestedFileType}. Generate the file using the 'generate_file' tool. Keep your text response very brief (e.g., "Here is your file").]`;
     } else if (outputMode === 'text_and_file') {
-      instruction += `\n[SYSTEM: The user requested BOTH text explanation and a downloadable file. Decide the best file type (docx, xlsx, or txt) based on the content (e.g. xlsx for tables, docx for formal reports). Use 'generate_file' tool to create it.]`;
+      instruction += `\n[SYSTEM: The user requested BOTH text explanation and a downloadable file. Decide the best file type (doc, xlsx, or txt) based on the content (e.g. xlsx for tables, doc for formal reports). Use 'generate_file' tool to create it.]`;
     }
 
     if (instruction) currentParts.push({ text: instruction });
@@ -105,9 +105,11 @@ export const sendMessageToGemini = async (
             if (filename.endsWith('.xlsx')) {
                 base64Data = generateExcelBase64(rawContent);
                 finalMime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-            } else if (filename.endsWith('.docx')) {
+            } else if (filename.endsWith('.doc') || filename.endsWith('.docx')) {
+                // Force extension to .doc if it was generated as docx but requested as doc, or vice versa if model messes up
+                // But generally we handle .doc here.
                 base64Data = generateWordDocBase64(rawContent);
-                finalMime = 'application/msword'; // We use .doc mime for compatibility with our HTML-as-Doc hack
+                finalMime = 'application/msword'; 
             } else {
                 base64Data = utf8_to_b64(rawContent);
                 finalMime = 'text/plain';

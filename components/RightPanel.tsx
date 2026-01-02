@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Message, Role } from '../types';
+import { Message, Role, Theme } from '../types';
 import { formatDate } from '../utils';
 
 interface RightPanelProps {
   messages: Message[];
   isLoading: boolean;
+  theme?: Theme | null;
 }
 
-const RightPanel: React.FC<RightPanelProps> = ({ messages, isLoading }) => {
+const RightPanel: React.FC<RightPanelProps> = ({ messages, isLoading, theme }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,9 +41,14 @@ const RightPanel: React.FC<RightPanelProps> = ({ messages, isLoading }) => {
     URL.revokeObjectURL(url);
   };
 
+  // Background style
+  const bgStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)'
+  };
+
   if (messages.length === 0) {
     return (
-      <div className="flex-1 h-full bg-gray-50 flex flex-col items-center justify-center p-8 text-center">
+      <div className="flex-1 h-full flex flex-col items-center justify-center p-8 text-center" style={bgStyle}>
         <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-4 text-teal-600">
            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
@@ -57,9 +63,9 @@ const RightPanel: React.FC<RightPanelProps> = ({ messages, isLoading }) => {
   }
 
   return (
-    <div className="flex-1 h-full flex flex-col bg-gray-50 overflow-hidden relative">
+    <div className="flex-1 h-full flex flex-col overflow-hidden relative" style={bgStyle}>
         {/* Header for context */}
-      <div className="px-6 py-4 bg-white border-b border-gray-200 shadow-sm z-10">
+      <div className="px-6 py-4 bg-white/80 border-b border-gray-200 shadow-sm z-10 backdrop-blur-sm">
         <h2 className="text-lg font-bold text-gray-800">Review Output & Discussion</h2>
       </div>
 
@@ -124,7 +130,7 @@ const RightPanel: React.FC<RightPanelProps> = ({ messages, isLoading }) => {
                                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                     </svg>
                                 )}
-                                {!file.name.endsWith('.xlsx') && !file.name.endsWith('.docx') && (
+                                {!file.name.endsWith('.xlsx') && !file.name.endsWith('.docx') && !file.name.endsWith('.doc') && (
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-600">
                                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                     </svg>

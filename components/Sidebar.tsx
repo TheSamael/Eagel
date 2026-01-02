@@ -9,6 +9,7 @@ interface SidebarProps {
   onCreateFolder: (name: string) => void;
   onDeleteFolder: (id: string, e: React.MouseEvent) => void;
   onOpenThemeSettings: () => void;
+  onGoHome: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -18,6 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onCreateFolder,
   onDeleteFolder,
   onOpenThemeSettings,
+  onGoHome,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
@@ -33,14 +35,21 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className="w-64 bg-teal-900 text-teal-50 flex flex-col h-full shadow-xl border-r border-teal-800 z-10 backdrop-blur-sm bg-opacity-95">
-      <div className="p-4 border-b border-teal-800">
-        <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+      <div className="p-4 border-b border-teal-800 flex justify-between items-start">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2 cursor-pointer hover:text-teal-200 transition-colors" onClick={onGoHome}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+              </svg>
+              Eagel Review
+          </h1>
+          <p className="text-xs text-teal-300 mt-1 opacity-80 italic">Eagel for the Eager.</p>
+        </div>
+        <button onClick={onGoHome} className="text-teal-400 hover:text-white" title="Go Home">
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
-            Eagel Review
-        </h1>
-        <p className="text-xs text-teal-300 mt-1 opacity-80 italic">Eagel for the Eager.</p>
+        </button>
       </div>
 
       <div className="p-3">
@@ -99,8 +108,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 {folder.name}
               </span>
               <button
-                onClick={(e) => onDeleteFolder(folder.id, e)}
-                className="absolute right-2 top-3 opacity-0 group-hover:opacity-100 text-teal-400 hover:text-red-400 transition-opacity p-1"
+                onClick={(e) => { e.stopPropagation(); onDeleteFolder(folder.id, e); }}
+                className="absolute right-2 top-3 opacity-0 group-hover:opacity-100 text-teal-400 hover:text-red-400 transition-opacity p-1 z-20"
                 title="Delete Folder"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">

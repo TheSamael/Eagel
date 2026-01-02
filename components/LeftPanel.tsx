@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Attachment, OutputMode, FileType } from '../types';
+import { Attachment, OutputMode, FileType, Theme } from '../types';
 import { processFiles } from '../utils';
 
 interface LeftPanelProps {
@@ -13,6 +13,7 @@ interface LeftPanelProps {
   setFileType: (type: FileType) => void;
   onSubmit: () => void;
   isLoading: boolean;
+  theme?: Theme | null;
 }
 
 const LeftPanel: React.FC<LeftPanelProps> = ({
@@ -26,6 +27,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   setFileType,
   onSubmit,
   isLoading,
+  theme,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,8 +52,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
   }
 
+  // Calculate background with fixed opacity
+  const bgStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)'
+  };
+
   return (
-    <div className="flex flex-col h-full bg-white border-r border-gray-200">
+    <div className="flex flex-col h-full border-r border-gray-200" style={bgStyle}>
       <div className="p-6 border-b border-gray-100">
         <h2 className="text-xl font-bold text-teal-900 mb-1">Input Context</h2>
         <p className="text-sm text-gray-500">Upload documents and set review parameters.</p>
@@ -144,7 +151,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 </div>
                 {outputMode === 'file_only' && (
                     <div className="ml-6 mt-2 flex flex-wrap gap-2">
-                         {(['txt', 'docx', 'xlsx'] as FileType[]).map(type => (
+                         {(['txt', 'doc', 'xlsx'] as FileType[]).map(type => (
                              <button
                                 key={type}
                                 onClick={(e) => { e.preventDefault(); setFileType(type); }}
@@ -191,7 +198,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         </div>
       </div>
 
-      <div className="p-6 border-t border-gray-200 bg-gray-50">
+      <div className="p-6 border-t border-gray-200 bg-gray-50/50">
         <button
           onClick={onSubmit}
           disabled={isLoading || (!instruction && pendingAttachments.length === 0)}
